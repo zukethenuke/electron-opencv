@@ -1,8 +1,8 @@
 {
-  "name": "electron-webcam",
-  "productName": "electron-webcam",
+  "name": "electron-opencv",
+  "productName": "electron-opencv",
   "version": "1.0.0",
-  "description": "Prototype Electron app that streams video from a webcam or IP cam on local wifi",
+  "description": "Prototype Electron app that streams video from an IP through opencv",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",

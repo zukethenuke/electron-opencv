@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 /**
  * This file will automatically be loaded by webpack and run in the "renderer" context.
  * To learn more about the differences between the "main" and the "renderer" context in
@@ -27,5 +28,18 @@
  */
 
 import './index.css';
+import { ipcRenderer } from 'electron';
 
 console.log('👋 This message is being logged by "renderer.js", included via webpack');
+
+const videoElement = document.querySelector('#video');
+
+function updateImageSrc(frame: any) {
+    // console.log(frame.length)
+    document.querySelector('img').src = frame;
+}
+
+ipcRenderer.on('video:frame', (event, frame) => {
+    updateImageSrc(frame);
+})
+

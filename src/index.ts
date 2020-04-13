@@ -4,6 +4,7 @@ import { spawn } from 'child_process';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 let pyProcess;
+let mainWindow: any;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -12,9 +13,12 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 
 const createWindow = () => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     height: 600,
     width: 800,
+    webPreferences: {
+      nodeIntegration: true
+    }
   });
 
   // and load the index.html of the app.
@@ -31,10 +35,12 @@ const createWindow = () => {
 app.on('ready', () => {
   pyProcess = new PythonShell(`${__dirname}/../../src/python/rtsp_stream.py`, { mode: 'text' });
 
-  pyProcess.on('message', function (message) {
+  pyProcess.on('message', function (frame) {
     // handle message (a line of text from stdout)
-    console.log('******* message ***********', message)
+    // console.log('******* frame ***********', frame)
+    mainWindow.webContents.send('video:frame', frame)
   });
+  
   pyProcess.on('close', function (message) {
     // handle message (a line of text from stdout)
     console.log('close', message)
