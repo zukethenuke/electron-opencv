@@ -83,6 +83,7 @@
     "typescript": "^3.7.0"
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0"
+    "electron-squirrel-startup": "^1.0.0",
+    "fluent-ffmpeg": "^2.1.2"
   }
 }

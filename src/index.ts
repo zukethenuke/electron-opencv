@@ -1,5 +1,9 @@
 import { app, BrowserWindow } from 'electron';
+import { PythonShell } from 'python-shell';
+import { spawn } from 'child_process';
+
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
+let pyProcess;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -17,13 +21,43 @@ const createWindow = () => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
+
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', () => {
+  pyProcess = new PythonShell(`${__dirname}/../../src/python/rtsp_stream.py`, { mode: 'text' });
+
+  pyProcess.on('message', function (message) {
+    // handle message (a line of text from stdout)
+    console.log('******* message ***********', message)
+  });
+  pyProcess.on('close', function (message) {
+    // handle message (a line of text from stdout)
+    console.log('close', message)
+  });
+
+  // pyProcess = spawn('python', ['-u', './python/rtsp_stream.py']);
+
+  // pyProcess.stdout.on('data', (data) => {
+  //   console.log(`******** data:${data} *********`);
+  // });
+
+  // // console.log(pyProcess)
+
+  // pyProcess.on('error', (err) => {
+  //   console.log('error', err)
+  // })
+
+  // pyProcess.on('close', (code) => {
+  //   console.log('closing: ', code)
+  // })
+
+  createWindow();
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
